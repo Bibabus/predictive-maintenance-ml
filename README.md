@@ -26,3 +26,24 @@
    git clone [https://github.com/Bibabus/predictive-maintenance-ml.git](https://github.com/Bibabus/predictive-maintenance-ml.git)
    cd predictive-maintenance-ml
    pip install -r requirements.txt
+
+2. **Предобработка данных:**
+   ```bash
+   python data_preprocessing.py
+
+3. **Обучение модели:**
+   ```bash
+   python model_training.py
+Скрипт выведет метрики Event Recall, FPR и Confusion Matrix, после чего сохранит модель в директорию models/.
+
+4. **Запуск сервера для AnyLogic:**
+   ```bash
+   python anylogic_connector.py
+Сервер будет доступен по адресу http://localhost:5000/predict.
+
+* **Воспроизводимые эксперименты:**
+  1. *Предобработка временных рядов.* Данные проходят Time-Series Split без заглядывания в будущее. Запускается через `data_preprocessing.py`.
+  2. *Обучение классификатора и расчет Event Recall.* Модель обучается на выделенных предикторах (вибрация, температура, сила тока). Рассчитывается метрика при обоснованном пороге $\tau = 0.7$. Запускается через `model_training.py`.
+  3. *Интеграция с имитационной средой.* API для AnyLogic воспроизводит логику переключения статусов агента оборудования (Штатная работа / Профилактика) в реальном времени. Запускается через `anylogic_connector.py`.
+* **Как запустить:** Описано в `README.md` (Установка зависимостей $\rightarrow$ Запуск `data_preprocessing.py` $\rightarrow$ Запуск `model_training.py` $\rightarrow$ Запуск `anylogic_connector.py`).
+* **Используемые данные:** Телеметрический набор "Bosch Production Line Performance" с искусственно сохраненным дисбалансом классов (98.2% норма / 1.8% аварии). Моделируется скриптом на лету, если не предоставлен исходный тяжелый `.csv` файл.
